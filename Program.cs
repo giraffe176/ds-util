@@ -252,7 +252,40 @@ public sealed class DatasiteUploaderApplication
             // Upload execution phase
             var uploadResult = await PerformUploadAsync(uploadPath, destination);
             
-            return uploadResult ? ExitCodes.Success : ExitCodes.UploadFailed;
+            if (!uploadResult)
+            {
+                return ExitCodes.UploadFailed;
+            }
+
+            // Post-upload action loop
+            var currentDestination = destination;
+            while (true)
+            {
+                var postAction = _ui.GetPostUploadAction(currentDestination);
+                
+                switch (postAction)
+                {
+                    case PostUploadAction.UploadMoreSameLocation:
+                        if (!await HandleUploadMoreSameLocationAsync(currentDestination))
+                        {
+                            return ExitCodes.UploadFailed;
+                        }
+                        break;
+                        
+                    case PostUploadAction.UploadNewLocation:
+                        var newDestination = await HandleUploadNewLocationAsync(project);
+                        if (newDestination != null)
+                        {
+                            currentDestination = newDestination; // Update for next iteration
+                        }
+                        // If newDestination is null, just continue with the current destination
+                        break;
+                        
+                    case PostUploadAction.Exit:
+                        _ui.DisplaySuccess("Thank you for using Datasite Uploader!");
+                        return ExitCodes.Success;
+                }
+            }
         }
         catch (OperationCanceledException)
         {
@@ -268,7 +301,6 @@ public sealed class DatasiteUploaderApplication
         }
         finally
         {
-            _ui.WaitForUser("Press any key to exit...");
             _appCancellation.Dispose();
         }
     }
@@ -716,6 +748,95 @@ public sealed class DatasiteUploaderApplication
         {
             _logger.LogError(ex, "Error displaying upload summary");
             _ui.DisplayError($"Error creating summary: {ex.Message}");
+        }
+    }
+
+    private async Task<bool> HandleUploadMoreSameLocationAsync(Destination destination)
+    {
+        try
+        {
+            _ui.DisplayInfo($"📤 Uploading more files to: {destination.Path}");
+            
+            // Get new upload path
+            var uploadPath = _ui.GetUploadPath();
+            if (string.IsNullOrEmpty(uploadPath))
+            {
+                _ui.DisplayWarning("No upload path selected");
+                return true; // Return to post-upload menu
+            }
+
+            // Validation phase
+            var validation = _uploadService.ValidateUploadPath(uploadPath);
+            if (!validation.IsValid)
+            {
+                _ui.DisplayError($"Upload validation failed: {validation.ErrorMessage}");
+                return true; // Return to post-upload menu
+            }
+
+            // Upload preview and confirmation
+            if (!await ShowUploadPreviewAndConfirm(uploadPath, destination))
+            {
+                return true; // Return to post-upload menu
+            }
+
+            // Upload execution
+            return await PerformUploadAsync(uploadPath, destination);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error handling upload to same location");
+            _ui.DisplayError($"Error: {ex.Message}");
+            return true; // Return to post-upload menu
+        }
+    }
+
+    private async Task<Destination?> HandleUploadNewLocationAsync(Project project)
+    {
+        try
+        {
+            _ui.DisplayInfo("📂 Selecting new upload destination...");
+            
+            // Destination selection phase
+            var destination = await SelectDestinationAsync(project);
+            if (destination == null)
+            {
+                _ui.DisplayWarning("No destination selected");
+                return null; // Return to post-upload menu without destination change
+            }
+
+            _ui.DisplaySuccess($"📂 Selected destination: {destination.Path}");
+
+            // Get upload path
+            var uploadPath = _ui.GetUploadPath();
+            if (string.IsNullOrEmpty(uploadPath))
+            {
+                _ui.DisplayWarning("No upload path selected");
+                return null; // Return to post-upload menu without destination change
+            }
+
+            // Validation phase
+            var validation = _uploadService.ValidateUploadPath(uploadPath);
+            if (!validation.IsValid)
+            {
+                _ui.DisplayError($"Upload validation failed: {validation.ErrorMessage}");
+                return null; // Return to post-upload menu without destination change
+            }
+
+            // Upload preview and confirmation
+            if (!await ShowUploadPreviewAndConfirm(uploadPath, destination))
+            {
+                return null; // Return to post-upload menu without destination change
+            }
+
+            // Upload execution
+            var uploadResult = await PerformUploadAsync(uploadPath, destination);
+            return uploadResult ? destination : null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error handling upload to new location");
+            _ui.DisplayError($"Error: {ex.Message}");
+            return null; // Return to post-upload menu without destination change
         }
     }
 

@@ -623,6 +623,36 @@ public class ConsoleUserInterface : IUserInterface
         Console.ReadKey(true);
     }
 
+    public PostUploadAction GetPostUploadAction(Destination currentDestination)
+    {
+        Console.WriteLine();
+        DisplayInfo("🎉 Upload completed successfully! What would you like to do next?");
+        DrawSeparator();
+
+        WriteColored("  1. ", ConsoleColor.White);
+        WriteColored("📤 ", ConsoleColor.Green);
+        WriteColoredLine($"Upload more files to the same location ({currentDestination.Path})", ConsoleColor.Green);
+
+        WriteColored("  2. ", ConsoleColor.White);
+        WriteColored("📂 ", ConsoleColor.Cyan);
+        WriteColoredLine("Upload files to a different location", ConsoleColor.Cyan);
+
+        WriteColored("  3. ", ConsoleColor.White);
+        WriteColored("🚪 ", ConsoleColor.Yellow);
+        WriteColoredLine("Exit application", ConsoleColor.Yellow);
+
+        Console.WriteLine();
+        var selection = PromptForIntegerInput("Enter your choice (1-3): ", 1, 3);
+        
+        return selection switch
+        {
+            1 => PostUploadAction.UploadMoreSameLocation,
+            2 => PostUploadAction.UploadNewLocation,
+            3 => PostUploadAction.Exit,
+            _ => PostUploadAction.Exit // Default to exit if no valid selection
+        };
+    }
+
     protected void WriteColored(string text, ConsoleColor color)
     {
         var originalColor = Console.ForegroundColor;

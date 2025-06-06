@@ -321,3 +321,24 @@ public enum NavigationAction
     /// </summary>
     Cancel
 }
+
+/// <summary>
+/// Post-upload action for user choice after successful upload
+/// </summary>
+public enum PostUploadAction
+{
+    /// <summary>
+    /// Upload more files to the same location
+    /// </summary>
+    UploadMoreSameLocation,
+    
+    /// <summary>
+    /// Upload files to a new location
+    /// </summary>
+    UploadNewLocation,
+    
+    /// <summary>
+    /// Exit the application
+    /// </summary>
+    Exit
+}

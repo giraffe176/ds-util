@@ -155,6 +155,13 @@ public interface IUserInterface
     /// </summary>
     /// <param name="message">Optional message to display</param>
     void WaitForUser(string? message = null);
+
+    /// <summary>
+    /// Prompts user for next action after successful upload
+    /// </summary>
+    /// <param name="currentDestination">The destination where files were just uploaded</param>
+    /// <returns>Post-upload action choice</returns>
+    PostUploadAction GetPostUploadAction(Destination currentDestination);
 }
 
 /// <summary>
