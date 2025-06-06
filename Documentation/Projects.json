@@ -1,0 +1,871 @@
+{
+  "id": "project",
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Projects",
+    "description": "A virtual data room (VDR) is an online repository of information that is used for the storing and\ndistribution of documents. In many cases, a virtual data room is used to facilitate the due diligence\nprocess during an M&A transaction, loan syndication, or private equity and venture capital transactions.\nVDRs may contain one or many projects or content libraries (contexts). Each project has its own controls\nthat can be managed by the Admins on the Project.\n\nDatasite has multiple types of projects available, depending on where you are in the M&A process:\nOutreach, Pipeline, Acquire, Prepare, Diligence, and Archive. At this time, the Projects API lets\nyou create a Prepare project, where you can add files and set up user roles in advance of inviting\nusers for due diligence. The API also allows you to invite a user to any project and provides calls\nto get a summary of all projects or of a single project.\n\n\n## Errors\n\nThe following is a list of errors that might be produced by this service.\n\n| Error Code | HTTP Status | Description |\n| --- | --- | --- |\n| DS0001 | 500 INTERNAL_SERVER_ERROR | Generic internal server error<br/><br/>*Example Message*:<br/>`Unexpected error` |\n| DS0002 | 404 NOT_FOUND | Generic not found error.  Used when the error source or request path makes it obvious what's not found or where a cause will be attached and logged error will facilitate in diagnosis<br/><br/>*Example Message*:<br/>`Resource Not Found` |\n| DS0003 | 404 NOT_FOUND | Not found error identifying what's not found using unstructured information in the message<br/><br/>*Example Message*:<br/>`some resource Not Found` |\n| DS0010 | 400 BAD_REQUEST | API expected a request body that was not provided<br/><br/>*Example Message*:<br/>`Required request body is missing` |\n| DS0011 | 400 BAD_REQUEST | Unable to deserialize the request<br/><br/>*Example Message*:<br/>`Cannot Deserialize` |\n| DS0012 | 400 BAD_REQUEST | Validation on an argument failed<br/><br/>*Example Message*:<br/>`Method argument not valid` |\n| DS0013 | 400 BAD_REQUEST | Validation on an argument failed<br/><br/>*Example Message*:<br/>`Constraint violation` |\n| DS0014 | 400 BAD_REQUEST | *Example Message*:<br/>`Attribute Not Valid` |\n| DS0015 | 405 METHOD_NOT_ALLOWED | *Example Message*:<br/>`Method Not Allowed` |\n| DS0016 | 415 UNSUPPORTED_MEDIA_TYPE | *Example Message*:<br/>`Unsupported Media Type` |\n| DS0017 | 403 FORBIDDEN | *Example Message*:<br/>`Forbidden` |\n| DS0018 | 400 BAD_REQUEST | *Example Message*:<br/>`Bad Request` |\n| DS0019 | 400 BAD_REQUEST | Input is mismatched and cannot be deserialized. Please refer to the API documentation.<br/><br/>*Example Message*:<br/>`Mismatched Input` |\n| DS0020 | 400 BAD_REQUEST | *Example Message*:<br/>`Unable to read request body` |\n| PPS4000 | 400 BAD_REQUEST | *Example Message*:<br/>`Bad request, could not create project` |\n| PPS4030 | 403 FORBIDDEN | *Example Message*:<br/>`You do not have permission to create a PREPARE project` |\n| PPS4040 | 404 NOT_FOUND | *Example Message*:<br/>`Project not found for id 320e5d50df0aa31815bf` |\n| PPS4041 | 404 NOT_FOUND | *Example Message*:<br/>`Role not found for id 320e5d50df0aa31815bf` |\n| PPS4042 | 404 NOT_FOUND | *Example Message*:<br/>`Subscription not found for id 320e5d50df0aa31815bf` |\n| PPS5000 | 500 INTERNAL_SERVER_ERROR | *Example Message*:<br/>`Unexpected error` |\n| PPS5001 | 500 INTERNAL_SERVER_ERROR | Produced when an upstream service produces a non-error response in an unexpected format.<br/><br/>*Example Message*:<br/>`Unexpected error` |\n| UPG0001 | 500 INTERNAL_SERVER_ERROR | This will be produced as a final fallback for any unhandled errors<br/><br/>*Example Message*:<br/>`some adhoc unexpected error` |\n| UPG0002 | 500 INTERNAL_SERVER_ERROR | Produced when the request is valid, but some other scenario has resulted in more than one usage policy being selected when only one should.<br/><br/>*Example Message*:<br/>`It is unclear which usage policy to use` |\n| UPG0003 | 500 INTERNAL_SERVER_ERROR | The guard request should have returned a resource reservation id and did not<br/><br/>*Example Message*:<br/>`The guard request should have returned a resource reservation id and did not` |\n| UPG0004 | 500 INTERNAL_SERVER_ERROR | The HTTP request context is not defined<br/><br/>*Example Message*:<br/>`The HTTP request context is not defined` |\n| UPG0005 | 403 FORBIDDEN | User is not a member of the usage policy specified<br/><br/>*Example Message*:<br/>`User is not a member of the usage policy specified` |\n\n| Included Audiences | Included Lifecycles |\n| --- | --- |\n| PUBLIC | GA |\n\n",
+    "version": "2024-04-01",
+    "x-datasite-summary": "Create and retrieve projects or invite a user to a project with the Projects API.",
+    "x-datasite-audience-lifecycle-index": [
+      {
+        "audience": "PUBLIC",
+        "lifecycle": "GA"
+      }
+    ]
+  },
+  "servers": [
+    {
+      "url": "https://api.americas.datasite.com",
+      "description": "Datasite API Gateway - USA"
+    }
+  ],
+  "security": [
+    {
+      "AuthToken": []
+    }
+  ],
+  "paths": {
+    "/subscriptions/{subscriptionId}/projects": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Create a new project in a subscription",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "createProjectInSubscription",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiRequestProjectCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseProjectResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC"
+      }
+    },
+    "/projects/{projectId}/invites": {
+      "post": {
+        "tags": [
+          "Invites"
+        ],
+        "summary": "Invite a user to a project",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "inviteUserToProject",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "description": "Unique identifier for project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiRequestInviteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseInviteResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC"
+      }
+    },
+    "/projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Retrieve all projects",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "getAllProjects",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "The sorting criteria in the format 'sort=property[,property...][,{ASC|DESC}]'. The following properties are allowed:\n\n- name: name of project\n- datacenter: datacenter in which project was created (possible values: USA, DEU, AUS) \n- offeringType: type of product with which the project is associated (possible values: ADD_ON, ACQUIRE, ARCHIVE, DILIGENCE, OUTREACH, PIPELINE, PREPARE, OTHER, POC, CONTENT_LIBRARY)\n- state: state of the project (possible values: NEW, PREP, BUILD, ACTIVE, HIBERNATION, SUSPENDED, CLOSURE_REQUESTED, CLOSED, READY_FOR_DELETE, DELETED)\n- launchState: launch status of project (possible values: LAUNCHED, UNLAUNCHED)\n\n_Example: ?sort=name,datacenter,asc&sort=offeringType,desc_",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "The filter criteria must be in the format 'filter=property:operation:value' where operation is the comparison to perform (e.g., eq, ne, gt, gte, lt, lte, in, nin, like, nlike). The following properties are allowed:\n\n- name: name of project\n- datacenter: datacenter in which project was created (possible values: USA, DEU, AUS) \n- offeringType: type of product with which the project is associated (possible values: ADD_ON, ACQUIRE, ARCHIVE, DILIGENCE, OUTREACH, PIPELINE, PREPARE, OTHER, POC, CONTENT_LIBRARY)\n- state: state of the project (possible values: NEW, PREP, BUILD, ACTIVE, HIBERNATION, SUSPENDED, CLOSURE_REQUESTED, CLOSED, READY_FOR_DELETE, DELETED)\n- launchState: launch status of project (possible values: LAUNCHED, UNLAUNCHED)\n\n_Example: ?filter=name:like:%test%&filter=datacenter:eq:DEU_",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListProjectResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC",
+        "x-datasite-api-sortable": [
+          "name",
+          "datacenter",
+          "offeringType",
+          "state",
+          "launchState"
+        ],
+        "x-datasite-api-filterable": [
+          "name:STRING",
+          "datacenter:STRING",
+          "offeringType:STRING",
+          "state:STRING",
+          "launchState:STRING"
+        ]
+      }
+    },
+    "/projects/{projectId}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Retrieve a single project",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "getProject",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "description": "Unique identifier for project",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseProjectResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiErrorResponse": {
+        "required": [
+          "errors",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/ErrorMeta"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ApiErrorResponseErrorSource": {
+        "required": [
+          "pointer"
+        ],
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "Error": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ApiErrorResponseErrorSource"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ErrorMeta": {
+        "required": [
+          "apiVersion",
+          "error",
+          "path",
+          "status",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "error": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "apiVersion": {
+            "$ref": "#/components/schemas/ErrorMetaApiVersion"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ErrorMetaApiVersion": {
+        "type": "object",
+        "properties": {
+          "requested": {
+            "type": "string"
+          },
+          "served": {
+            "type": "string"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ApiRequestProjectCreateRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ProjectCreateRequest"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "Datacenter": {
+        "type": "string",
+        "description": "Datacenter in which the project will be created\n- USA: United States\n- DEU: Germany\n- AUS: Australia",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "USA",
+          "DEU",
+          "AUS"
+        ]
+      },
+      "IndustryType": {
+        "type": "string",
+        "description": "Industry sector for the transaction",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "TECHNOLOGY_MEDIA_TELECOM",
+          "LIFE_SCIENCES_HEALTHCARE",
+          "CONSUMER",
+          "INDUSTRIALS_TRANSPORT_DEFENSE",
+          "ENERGY_MINING_OIL_GAS",
+          "BUSINESS_SERVICES",
+          "FINANCIAL_SERVICES",
+          "LEISURE",
+          "REAL_ESTATE",
+          "OTHER"
+        ]
+      },
+      "ProjectCreateRequest": {
+        "required": [
+          "datacenter",
+          "industryType",
+          "name",
+          "offeringType",
+          "useCase"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of project"
+          },
+          "datacenter": {
+            "$ref": "#/components/schemas/Datacenter"
+          },
+          "useCase": {
+            "$ref": "#/components/schemas/UseCase"
+          },
+          "industryType": {
+            "$ref": "#/components/schemas/IndustryType"
+          },
+          "transactionValue": {
+            "$ref": "#/components/schemas/TransactionValue"
+          },
+          "offeringType": {
+            "$ref": "#/components/schemas/ProjectCreateRequestOfferingType"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ProjectCreateRequestOfferingType": {
+        "type": "string",
+        "description": "Type of Datasite [product](https://www.datasite.com/us/en/products/overview.html) with which the project is associated",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "PREPARE"
+        ]
+      },
+      "TransactionValue": {
+        "type": "string",
+        "description": "Approximate value of transaction",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "GREATER_THAN_US_1B",
+          "BETWEEN_US_500M_AND_1B",
+          "BETWEEN_US_100M_AND_500M",
+          "BETWEEN_US_10M_AND_100M",
+          "LESS_THAN_US_10M"
+        ]
+      },
+      "UseCase": {
+        "type": "string",
+        "description": "Type of transaction",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "ASSET_SALE",
+          "ASSET_PURCHASE",
+          "LICENSING",
+          "FUNDRAISING",
+          "IPO",
+          "AUDIT",
+          "BANKRUPTCY",
+          "BOARDSITE",
+          "INTERNAL_DATAROOM",
+          "LOAN_SYNDICATION",
+          "MARKETING",
+          "MERGER",
+          "PORTFOLIO_MANAGEMENT",
+          "PRIVATE_PLACEMENT",
+          "REAL_ESTATE",
+          "RESTRUCTURING",
+          "OTHER",
+          "FREE_TRIAL",
+          "UNKNOWN",
+          "BUYER",
+          "FILE_SHARING",
+          "COMPANY_SALE",
+          "DIVESTITURE",
+          "ACQUISITION",
+          "ADD_ON",
+          "IPO_LISTING",
+          "REFINANCING_RECAPITALIZATION",
+          "VC_FUNDING_ROUND",
+          "FINANCING_OTHER",
+          "INTERNAL_FILE_SHARING",
+          "PARTNERSHIPS_COLLABORATIONS",
+          "POST_MERGER_INTEGRATION",
+          "PRIVATE_EQUITY_FUNDRAISING",
+          "REGULATORY_MATTERS",
+          "RESTRUCTURING_OR_INSOLVENCY"
+        ]
+      },
+      "ApiResponseProjectResponse": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ProjectResponse"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "LaunchState": {
+        "type": "string",
+        "description": "This may be null when offeringType is OUTREACH, but should be present for other offering types.",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "UNLAUNCHED",
+          "LAUNCHED"
+        ]
+      },
+      "ProjectResponse": {
+        "required": [
+          "datacenter",
+          "id",
+          "name",
+          "offeringType",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "datacenter": {
+            "$ref": "#/components/schemas/Datacenter"
+          },
+          "offeringType": {
+            "$ref": "#/components/schemas/ProjectResponseOfferingType"
+          },
+          "state": {
+            "$ref": "#/components/schemas/ProjectState"
+          },
+          "launchState": {
+            "$ref": "#/components/schemas/LaunchState"
+          },
+          "subscriptionId": {
+            "type": "string"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ProjectResponseOfferingType": {
+        "type": "string",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "ACQUIRE",
+          "ARCHIVE",
+          "DILIGENCE",
+          "OUTREACH",
+          "PIPELINE",
+          "PREPARE",
+          "OTHER"
+        ]
+      },
+      "ProjectState": {
+        "type": "string",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "NEW",
+          "PREP",
+          "BUILD",
+          "ACTIVE",
+          "HIBERNATION",
+          "SUSPENDED",
+          "CLOSURE_REQUESTED",
+          "CLOSED",
+          "READY_FOR_DELETE",
+          "DELETED"
+        ]
+      },
+      "ApiRequestInviteRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/InviteRequest"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "InviteRequest": {
+        "required": [
+          "emailAddress",
+          "languageCode",
+          "roleId"
+        ],
+        "type": "object",
+        "properties": {
+          "emailAddress": {
+            "type": "string",
+            "description": "Email address to invite"
+          },
+          "roleId": {
+            "type": "string",
+            "description": "Id of the role to assign to the invitee"
+          },
+          "languageCode": {
+            "$ref": "#/components/schemas/LanguageCode"
+          },
+          "userClassification": {
+            "$ref": "#/components/schemas/MembershipType"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "LanguageCode": {
+        "type": "string",
+        "description": "Language to use for the invitation email",
+        "example": "en",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "en",
+          "de",
+          "es",
+          "fr",
+          "it",
+          "ja",
+          "ko",
+          "pl",
+          "pt",
+          "ru",
+          "sv",
+          "tr",
+          "zh",
+          "zh-tw",
+          "el-GR",
+          "da-DK"
+        ]
+      },
+      "MembershipType": {
+        "type": "string",
+        "description": "Classification of the invitee",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "BUYER",
+          "SELLER",
+          "NOT_APPLICABLE"
+        ]
+      },
+      "ApiResponseInviteResponse": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/InviteResponse"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "InviteResponse": {
+        "required": [
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Id of the user that was invited"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ApiResponseListProjectResponse": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectResponse"
+            }
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "AuthToken": {
+        "type": "http",
+        "name": "AuthToken",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

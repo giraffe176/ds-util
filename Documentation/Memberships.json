@@ -1,0 +1,833 @@
+{
+  "id": "membership",
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Memberships",
+    "description": "Get a list of users who have been invited to a specific project or subscription. The status includes users who have been drafted invites, accepted invites, or who have been deactivated from the project or subscription. Users can also be activated or deactivated from the project.\n\n## Errors\n\nThe following is a list of errors that might be produced by this service.\n\n| Error Code | HTTP Status | Description |\n| --- | --- | --- |\n| DS0001 | 500 INTERNAL_SERVER_ERROR | Generic internal server error<br/><br/>*Example Message*:<br/>`Unexpected error` |\n| DS0002 | 404 NOT_FOUND | Generic not found error.  Used when the error source or request path makes it obvious what's not found or where a cause will be attached and logged error will facilitate in diagnosis<br/><br/>*Example Message*:<br/>`Resource Not Found` |\n| DS0003 | 404 NOT_FOUND | Not found error identifying what's not found using unstructured information in the message<br/><br/>*Example Message*:<br/>`some resource Not Found` |\n| DS0010 | 400 BAD_REQUEST | API expected a request body that was not provided<br/><br/>*Example Message*:<br/>`Required request body is missing` |\n| DS0011 | 400 BAD_REQUEST | Unable to deserialize the request<br/><br/>*Example Message*:<br/>`Cannot Deserialize` |\n| DS0012 | 400 BAD_REQUEST | Validation on an argument failed<br/><br/>*Example Message*:<br/>`Method argument not valid` |\n| DS0013 | 400 BAD_REQUEST | Validation on an argument failed<br/><br/>*Example Message*:<br/>`Constraint violation` |\n| DS0014 | 400 BAD_REQUEST | *Example Message*:<br/>`Attribute Not Valid` |\n| DS0015 | 405 METHOD_NOT_ALLOWED | *Example Message*:<br/>`Method Not Allowed` |\n| DS0016 | 415 UNSUPPORTED_MEDIA_TYPE | *Example Message*:<br/>`Unsupported Media Type` |\n| DS0017 | 403 FORBIDDEN | *Example Message*:<br/>`Forbidden` |\n| DS0018 | 400 BAD_REQUEST | *Example Message*:<br/>`Bad Request` |\n| DS0019 | 400 BAD_REQUEST | Input is mismatched and cannot be deserialized. Please refer to the API documentation.<br/><br/>*Example Message*:<br/>`Mismatched Input` |\n| DS0020 | 400 BAD_REQUEST | *Example Message*:<br/>`Unable to read request body` |\n| PMS4000 | 404 NOT_FOUND | *Example Message*:<br/>`Membership found for project id 320e5d50df0aa31815bf, user id 320e5d50df0aa31815bf` |\n| PMS4001 | 404 NOT_FOUND | *Example Message*:<br/>`Membership not found for subscription id 320e5d50df0aa31815bf, user id 320e5d50df0aa31815bf` |\n| PMS4002 | 403 FORBIDDEN | *Example Message*:<br/>`User does not have permission to view user details.` |\n| PMS4003 | 500 INTERNAL_SERVER_ERROR | *Example Message*:<br/>`Error fetching user details.` |\n| UPG0001 | 500 INTERNAL_SERVER_ERROR | This will be produced as a final fallback for any unhandled errors<br/><br/>*Example Message*:<br/>`some adhoc unexpected error` |\n| UPG0002 | 500 INTERNAL_SERVER_ERROR | Produced when the request is valid, but some other scenario has resulted in more than one usage policy being selected when only one should.<br/><br/>*Example Message*:<br/>`It is unclear which usage policy to use` |\n| UPG0003 | 500 INTERNAL_SERVER_ERROR | The guard request should have returned a resource reservation id and did not<br/><br/>*Example Message*:<br/>`The guard request should have returned a resource reservation id and did not` |\n| UPG0004 | 500 INTERNAL_SERVER_ERROR | The HTTP request context is not defined<br/><br/>*Example Message*:<br/>`The HTTP request context is not defined` |\n| UPG0005 | 403 FORBIDDEN | User is not a member of the usage policy specified<br/><br/>*Example Message*:<br/>`User is not a member of the usage policy specified` |\n\n| Included Audiences | Included Lifecycles |\n| --- | --- |\n| PUBLIC | GA |\n\n",
+    "version": "2024-04-01",
+    "x-datasite-summary": "Get a list of memberships from a specific project or subscription, activate a user or deactivate a user with the Memberships API.",
+    "x-datasite-audience-lifecycle-index": [
+      {
+        "audience": "PUBLIC",
+        "lifecycle": "GA"
+      }
+    ]
+  },
+  "servers": [
+    {
+      "url": "https://api.americas.datasite.com",
+      "description": "Datasite API Gateway - USA"
+    }
+  ],
+  "security": [
+    {
+      "AuthToken": []
+    }
+  ],
+  "paths": {
+    "/subscriptions/{subscriptionId}/memberships/{userId}": {
+      "patch": {
+        "tags": [
+          "Subscription memberships"
+        ],
+        "summary": "Update a membership in a subscription",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "updateMembershipInSubscription",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiRequestSubscriptionMembershipUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseSubscriptionMembershipDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC"
+      }
+    },
+    "/projects/{projectId}/memberships/{userId}": {
+      "patch": {
+        "tags": [
+          "Project memberships"
+        ],
+        "summary": "Update a membership in a project",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "updateMembershipInProject",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiRequestProjectMembershipUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseProjectMembershipDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC"
+      }
+    },
+    "/subscriptions/{subscriptionId}/memberships": {
+      "get": {
+        "tags": [
+          "Subscription memberships"
+        ],
+        "summary": "Retrieve all memberships in a subscription",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "getAllMembershipsInSubscription",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The results page to return (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The number of results to return per page.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "The filter criteria must be in the format 'filter=property:operation:value' where operation is the comparison to perform (e.g., eq, ne, gt, gte, lt, lte, in, nin, like, nlike). The following properties are allowed:\n\n- userId: id of the user\n- membershipStatus: status of the membership [ACTIVATED, DEACTIVATED, INVITED]\n\n_Example: ?filter=userId:eq:5f6bae25-cacf-456a-acc4-c535a99c6ab0&filter=membershipStatus:eq:ACTIVATED_",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedApiResponseSubscriptionMembershipDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC",
+        "x-datasite-api-filterable": [
+          "userId:STRING",
+          "membershipStatus:STRING"
+        ]
+      }
+    },
+    "/projects/{projectId}/memberships": {
+      "get": {
+        "tags": [
+          "Project memberships"
+        ],
+        "summary": "Retrieve all memberships in a project",
+        "description": "\n| Introduced On Version | Audience | Lifecycle |\n| --- | --- | --- |\n| 2024-04-01 | PUBLIC | GA |\n\n",
+        "operationId": "getAllMembershipsInProject",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The results page to return (0..N)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The number of results to return per page.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "The filter criteria must be in the format 'filter=property:operation:value' where operation is the comparison to perform (e.g., eq, ne, gt, gte, lt, lte, in, nin, like, nlike). The following properties are allowed:\n\n- userId: id of the user\n- membershipStatus: status of the membership [ACTIVATED, DEACTIVATED, DRAFTED, EXPIRED, INVITED]\n\n_Example: ?filter=userId:eq:5b3a46ab89cf1300102bef69&filter=membershipStatus:eq:ACTIVATED_",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "x-datasite-api-version",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "default": "2024-04-01",
+              "enum": [
+                "2024-04-01"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedApiResponseProjectMembershipDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-introduced-on": "2024-04-01",
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC",
+        "x-datasite-api-filterable": [
+          "userId:STRING",
+          "membershipStatus:STRING"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiErrorResponse": {
+        "required": [
+          "errors",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/ErrorMeta"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ApiErrorResponseErrorSource": {
+        "required": [
+          "pointer"
+        ],
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "Error": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ApiErrorResponseErrorSource"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ErrorMeta": {
+        "required": [
+          "apiVersion",
+          "error",
+          "path",
+          "status",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "error": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "apiVersion": {
+            "$ref": "#/components/schemas/ErrorMetaApiVersion"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ErrorMetaApiVersion": {
+        "type": "object",
+        "properties": {
+          "requested": {
+            "type": "string"
+          },
+          "served": {
+            "type": "string"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ApiRequestSubscriptionMembershipUpdateDto": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SubscriptionMembershipUpdateDto"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "MembershipStatusUpdate": {
+        "type": "string",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "ACTIVATED",
+          "DEACTIVATED"
+        ]
+      },
+      "SubscriptionMembershipUpdateDto": {
+        "required": [
+          "membershipStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "membershipStatus": {
+            "$ref": "#/components/schemas/MembershipStatusUpdate"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ApiResponseSubscriptionMembershipDto": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SubscriptionMembershipDto"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "SubscriptionMembershipDto": {
+        "required": [
+          "email",
+          "membershipStatus",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "membershipStatus": {
+            "$ref": "#/components/schemas/SubscriptionMembershipStatus"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "SubscriptionMembershipStatus": {
+        "type": "string",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "ACTIVATED",
+          "DEACTIVATED",
+          "INVITED"
+        ]
+      },
+      "ApiRequestProjectMembershipUpdateDto": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ProjectMembershipUpdateDto"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ProjectMembershipUpdateDto": {
+        "required": [
+          "membershipStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "membershipStatus": {
+            "$ref": "#/components/schemas/MembershipStatusUpdate"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ApiResponseProjectMembershipDto": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ProjectMembershipDto"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ProjectMembershipDto": {
+        "required": [
+          "email",
+          "membershipStatus",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "membershipStatus": {
+            "$ref": "#/components/schemas/ProjectMembershipStatus"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "ProjectMembershipStatus": {
+        "type": "string",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "ACTIVATED",
+          "DEACTIVATED",
+          "INVITED",
+          "DRAFTED",
+          "EXPIRED"
+        ]
+      },
+      "Direction": {
+        "type": "string",
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ],
+        "enum": [
+          "ASC",
+          "DESC"
+        ]
+      },
+      "PagedApiResponseMeta": {
+        "required": [
+          "page",
+          "sort"
+        ],
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PagedApiResponseMetaPage"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagedApiResponseMetaSort"
+            }
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "PagedApiResponseMetaPage": {
+        "required": [
+          "number",
+          "size",
+          "totalElements"
+        ],
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "PagedApiResponseMetaSort": {
+        "required": [
+          "direction",
+          "property"
+        ],
+        "type": "object",
+        "properties": {
+          "property": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/Direction"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "PagedApiResponseSubscriptionMembershipDto": {
+        "required": [
+          "data",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionMembershipDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PagedApiResponseMeta"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      },
+      "PagedApiResponseProjectMembershipDto": {
+        "required": [
+          "data",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectMembershipDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PagedApiResponseMeta"
+          }
+        },
+        "x-datasite-audience-lifecycle-index": [
+          {
+            "audience": "PUBLIC",
+            "lifecycle": "GA"
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "AuthToken": {
+        "type": "http",
+        "name": "AuthToken",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

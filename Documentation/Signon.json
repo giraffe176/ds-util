@@ -1,0 +1,495 @@
+{
+  "id": "signon",
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sign On",
+    "description": "Every API endpoint requires a valid and active Access Token to make API calls. Datasite uses OAuth2 to authenticate access requests. OAuth2 generates an Access Token, a unique string that identifies an authenticated client to the API endpoints, which grants the client permission to access a protected resource. When an Access Token is requested using OAuth 2.0, an Access Token is returned along with a Refresh Token that a client can use to get a new Access Token, without user interaction. Use the Sign On API to get the Access Token you will need to successfully send calls.",
+    "version": "2024-04-01",
+    "x-datasite-summary": "Authenticate access requests with the Sign On API.",
+    "x-datasite-audience-lifecycle-index": [
+      {
+        "audience": "PUBLIC",
+        "lifecycle": "GA"
+      }
+    ]
+  },
+  "externalDocs": {
+    "description": "More info on how to generate the tokens in various scenarios - SSO, Mobile, etc.",
+    "url": "https://github.com/MerrillCorporation/signon-service"
+  },
+  "servers": [
+    {
+      "url": "https://token.datasite.com",
+      "description": "Datasite Sign On Service"
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuth2",
+      "description": "Api that generates access tokens"
+    }
+  ],
+  "paths": {
+    "/oauth2/token": {
+      "post": {
+        "tags": [
+          "OAuth2"
+        ],
+        "summary": "Exchange credentials for a token",
+        "description": "",
+        "operationId": "getToken",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuth2Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sample response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuth2Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC",
+        "x-datasite-api-introduced-on": "2024-04-01"
+      }
+    },
+    "/oauth2/refresh_token": {
+      "post": {
+        "tags": [
+          "OAuth2"
+        ],
+        "summary": "Refresh token",
+        "description": "",
+        "operationId": "refreshToken",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "required": [
+                  "client_id",
+                  "client_secret",
+                  "refresh_token"
+                ],
+                "type": "object",
+                "properties": {
+                  "refresh_token": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sample response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC",
+        "x-datasite-api-introduced-on": "2024-04-01"
+      }
+    },
+    "/oauth2/refresh_token/validate": {
+      "post": {
+        "tags": [
+          "OAuth2"
+        ],
+        "summary": "Validate refresh token",
+        "description": "",
+        "operationId": "validateRefreshToken",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "required": [
+                  "client_id",
+                  "client_secret",
+                  "refresh_token"
+                ],
+                "type": "object",
+                "properties": {
+                  "refresh_token": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sample response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC",
+        "x-datasite-api-introduced-on": "2024-04-01"
+      }
+    },
+    "/oauth2/refresh_token/revoke": {
+      "post": {
+        "tags": [
+          "OAuth2"
+        ],
+        "summary": "Revoke refresh token",
+        "description": "",
+        "operationId": "revokeRefreshToken",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "required": [
+                  "client_id",
+                  "client_secret",
+                  "refresh_token"
+                ],
+                "type": "object",
+                "properties": {
+                  "refresh_token": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success response"
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-datasite-api-lifecycle": "GA",
+        "x-datasite-api-audience": "PUBLIC",
+        "x-datasite-api-introduced-on": "2024-04-01"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OAuth2Request": {
+        "discriminator": {
+          "propertyName": "grant_type",
+          "mapping": {
+            "authorization_code": "#/components/schemas/OAuth2RequestGrantTypeAuthorizationCode"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OAuth2RequestGrantTypeAuthorizationCode"
+          }
+        ]
+      },
+      "OAuth2RequestGrantTypeBase": {
+        "required": [
+          "client_id",
+          "client_secret",
+          "grant_type"
+        ],
+        "type": "object",
+        "properties": {
+          "grant_type": {
+            "type": "string",
+            "enum": [
+              "authorization_code"
+            ]
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          }
+        }
+      },
+      "OAuth2RequestGrantTypeAuthorizationCode": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OAuth2RequestGrantTypeBase"
+          },
+          {
+            "required": [
+              "code",
+              "redirect_uri"
+            ],
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "redirect_uri": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "OAuth2Response": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OAuth2ResponseGrantTypeAuthorizationCode"
+          }
+        ]
+      },
+      "OAuth2ResponseBase": {
+        "required": [
+          "access_token",
+          "application_name",
+          "organization_name",
+          "subject"
+        ],
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "access_token": {
+            "type": "string"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "application_name": {
+            "type": "string"
+          }
+        }
+      },
+      "OAuth2ResponseGrantTypeAuthorizationCode": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OAuth2ResponseBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "refresh_token": {
+                "type": "string"
+              },
+              "client_id": {
+                "type": "string"
+              },
+              "organizationId": {
+                "type": "string"
+              },
+              "sso": {
+                "type": "boolean",
+                "default": false
+              },
+              "mail": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastname": {
+                "type": "string"
+              },
+              "loginUrl": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidTokenResponse": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean"
+          },
+          "exp": {
+            "type": "number"
+          }
+        }
+      },
+      "InfoResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
