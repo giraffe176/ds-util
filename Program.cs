@@ -109,11 +109,18 @@ internal sealed class Program
                     });
                     
                     Console.WriteLine("Registering application services...");
-                    // Register application services
+                    // Register core application services
                     services.AddSingleton<IDatasiteApiService, DatasiteApiService>();
                     services.AddSingleton<IUploadService, UploadService>();
                     services.AddSingleton<IDestinationService, DestinationService>();
                     services.AddSingleton<IUserInterface, ConsoleUserInterface>();
+                    
+                    // Register permission and authorization services
+                    services.AddSingleton<IPermissionService, PermissionService>();
+                    services.AddSingleton<ICsvPermissionService, CsvPermissionService>();
+                    services.AddSingleton<UserContext>();
+                    services.AddSingleton<AuthorizedDataroomService>();
+                    
                     services.AddSingleton<DatasiteUploaderApplication>();
                     
                     Console.WriteLine("Services configuration complete.");
